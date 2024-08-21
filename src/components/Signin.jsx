@@ -1,13 +1,18 @@
-// src/components/SignIn.js
-import React from "react";
+
+import React, { useState } from "react";
 import { auth, provider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
+import image from '../assets/image.png';
+import AdvancedComponent from '../components/Comment';
 
 const SignIn = () => {
+  const [user, setUser] = useState(null); 
+
   const signInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
-      console.log(result.user); // Handle the signed-in user info here
+      setUser(result.user); 
+      console.log(result.user); 
     } catch (error) {
       console.error(error);
     }
@@ -15,12 +20,16 @@ const SignIn = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <button
-        onClick={signInWithGoogle}
-        className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-      >
-        Sign in with Google
-      </button>
+      {user ? (
+        <AdvancedComponent user={user} />
+      ) : (
+        <div className="flex items-center justify-center gap-2 text-white" onClick={signInWithGoogle}>
+          <img className="w-[50px] bg-transparent" src={image} alt="" />
+          <button className="font-medium text-2xl p-3 bg-orange-500 rounded hover:bg-orange-600">
+            Sign in with Google
+          </button>
+        </div>
+      )}
     </div>
   );
 };
